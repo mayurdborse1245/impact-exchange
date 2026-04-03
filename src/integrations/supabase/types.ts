@@ -14,16 +14,230 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      investments: {
+        Row: {
+          amount: number
+          created_at: string
+          fiu_count: number
+          id: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          fiu_count: number
+          id?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          fiu_count?: number
+          id?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          read_status: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          read_status?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          read_status?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          id: string
+          updated_at: string
+          username: string | null
+          wallet_balance: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          id: string
+          updated_at?: string
+          username?: string | null
+          wallet_balance?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+          username?: string | null
+          wallet_balance?: number
+        }
+        Relationships: []
+      }
+      progress_reports: {
+        Row: {
+          created_at: string
+          id: string
+          images: string[] | null
+          notes: string | null
+          project_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          images?: string[] | null
+          notes?: string | null
+          project_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          images?: string[] | null
+          notes?: string | null
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_reports_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          budget: number
+          created_at: string
+          description: string | null
+          expected_impact: number | null
+          fiu_sold: number
+          fiu_total: number
+          id: string
+          images: string[] | null
+          location: string | null
+          owner_id: string
+          price_per_fiu: number
+          project_duration: number | null
+          risk_score: string | null
+          roi: number | null
+          status: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          budget?: number
+          created_at?: string
+          description?: string | null
+          expected_impact?: number | null
+          fiu_sold?: number
+          fiu_total?: number
+          id?: string
+          images?: string[] | null
+          location?: string | null
+          owner_id: string
+          price_per_fiu?: number
+          project_duration?: number | null
+          risk_score?: string | null
+          roi?: number | null
+          status?: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          budget?: number
+          created_at?: string
+          description?: string | null
+          expected_impact?: number | null
+          fiu_sold?: number
+          fiu_total?: number
+          id?: string
+          images?: string[] | null
+          location?: string | null
+          owner_id?: string
+          price_per_fiu?: number
+          project_duration?: number | null
+          risk_score?: string | null
+          roi?: number | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_project_owner: {
+        Args: { _project_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "investor" | "project_submitter"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +364,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "investor", "project_submitter"],
+    },
   },
 } as const
